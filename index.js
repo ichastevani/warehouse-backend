@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const productRoutes = require('./routes/productRoutes');
+const warehouseRoutes = require('./routes/warehouseRoutes');
 const userRoutes = require('./routes/userRoutes'); // Tambahkan route user
 
 const app = express();
@@ -14,6 +15,8 @@ app.use('/api/products', productRoutes);
 
 // Menggunakan route untuk user (Sign Up)
 app.use('/api/users', userRoutes); // Tambahkan route user
+
+app.use('/api/gudang', warehouseRoutes);
 
 const PORT = 5000;
 app.listen(PORT, () => {
