@@ -30,6 +30,7 @@ const addProduct = (product, callback) => {
 
 
 
+
 const updateProduct = (id, product, callback) => {
     const sql = 'UPDATE products SET sku = ?, name = ?, stock = ?, status = ?, warehouse_id = ? WHERE id = ?';
     db.query(sql, [product.sku, product.name, product.stock, product.status, product.warehouse_id, id], callback);
