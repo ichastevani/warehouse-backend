@@ -3,18 +3,22 @@ const productModel = require("../models/productModel");
 
 const getProducts = (req, res) => {
   productModel.getAllProducts((err, results) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json(results);
+      if (err) return res.status(500).json({ error: err });
+      res.json(results);
   });
 };
 
+
 const createProduct = (req, res) => {
-  const newProduct = req.body;
+  const { sku, name, stock, status, location } = req.body;
+  const newProduct = { sku, name, stock, status, location };
   productModel.addProduct(newProduct, (err, result) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json({ message: "Produk berhasil ditambahkan", id: result.insertId });
+      if (err) return res.status(500).json({ error: err });
+      res.json({ message: "Produk berhasil ditambahkan", id: result.insertId });
   });
 };
+
+
 
 const updateProduct = (req, res) => {
   const { id } = req.params;
