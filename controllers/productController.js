@@ -10,8 +10,13 @@ const getProducts = (req, res) => {
 
 
 const createProduct = (req, res) => {
-  const { sku, name, stock, status, location } = req.body;
-  const newProduct = { sku, name, stock, status, location };
+  var image
+  if (req.file) {
+    image = req.file.buffer; // The uploaded image
+  }
+  
+  const { sku, name, stock, unit, status, location, shelf_location } = req.body;
+  const newProduct = { sku, name, stock, unit, status, location, image, shelf_location };
   productModel.addProduct(newProduct, (err, result) => {
       if (err) return res.status(500).json({ error: err });
       res.json({ message: "Produk berhasil ditambahkan", id: result.insertId });
