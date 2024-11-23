@@ -29,6 +29,15 @@ const addProduct = (product, callback) => {
 };
 
 
+const getTotalStock = (callback) => {
+    const sql = `SELECT SUM(stock) AS totalStock FROM products`;
+    db.query(sql, (err, result) => {
+        if (err) return callback(err, null);
+        callback(null, result[0]);
+    });
+};
+
+
 
 
 const updateProduct = (id, product, callback) => {
@@ -47,4 +56,5 @@ module.exports = {
     addProduct,
     updateProduct,
     deleteProduct,
+    getTotalStock, // Pastikan ini ada
 };

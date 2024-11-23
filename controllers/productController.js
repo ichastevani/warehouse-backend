@@ -8,6 +8,13 @@ const getProducts = (req, res) => {
   });
 };
 
+const getTotalStock = (req, res) => {
+  productModel.getTotalStock((err, result) => {
+      if (err) return res.status(500).json({ error: err });
+      res.json({ totalStock: result.totalStock || 0 });
+  });
+};
+
 
 const createProduct = (req, res) => {
   var image
@@ -47,4 +54,6 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
+  getTotalStock, // Pastikan ini ada
 };
+
