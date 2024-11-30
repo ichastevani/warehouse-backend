@@ -75,4 +75,28 @@ router.post('/signup', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        const query = 'SELECT name FROM users WHERE id = ?';
+        db.query(query, [userId], (err, results) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ error: 'Database error occurred' });
+            }
+
+            if (results.length === 0) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            res.status(200).json({ name: results[0].name });
+        });
+    } catch (err) {
+        console.error('Error fetching user:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
 module.exports = router;
