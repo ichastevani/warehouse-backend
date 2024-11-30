@@ -18,6 +18,9 @@ router.post('/', upload.single('image'), productController.createProduct);
 // Route untuk memperbarui produk dengan gambar
 router.put('/:id', upload.single('image'), productController.updateProduct);
 
+// Route untuk memperbarui jumlah stok produk
+router.put('/update-stock/:id', productController.updateStock);
+
 // Route untuk menghapus produk
 router.delete('/:id', productController.deleteProduct);
 

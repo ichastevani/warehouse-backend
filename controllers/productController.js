@@ -49,11 +49,35 @@ const deleteProduct = (req, res) => {
   });
 };
 
+const updateStock = (req, res) => {
+  const { id } = req.params;
+  const { stock } = req.body;
+
+  // Pastikan parameter stok yang diterima adalah angka dan lebih besar dari 0
+  if (typeof stock !== 'number' || stock < 0) {
+      return res.status(400).json({ message: "Stok harus berupa angka dan lebih besar dari 0" });
+  }
+
+  // Panggil fungsi di model untuk memperbarui stok produk
+  productModel.updateProductStock(id, stock, (err, result) => {
+      if (err) {
+          return res.status(500).json({ message: "Terjadi kesalahan saat memperbarui stok", error: err });
+      }
+
+      if (result.affectedRows === 0) {
+          return res.status(404).json({ message: "Produk tidak ditemukan" });
+      }
+
+      res.status(200).json({ message: "Stok produk berhasil diperbarui", data: result });
+  });
+};
+
 module.exports = {
   getProducts,
   createProduct,
   updateProduct,
   deleteProduct,
-  getTotalStock, // Pastikan ini ada
+  getTotalStock, 
+  updateStock,
 };
 

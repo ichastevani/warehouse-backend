@@ -51,10 +51,20 @@ const deleteProduct = (id, callback) => {
     db.query(sql, [id], callback);
 };
 
+const updateProductStock = (id, stock, callback) => {
+    const sql = `
+        UPDATE products
+        SET stock = ?
+        WHERE id = ?
+    `;
+    db.query(sql, [stock, id], callback);
+};
+
 module.exports = {
     getAllProducts,
     addProduct,
     updateProduct,
     deleteProduct,
-    getTotalStock, // Pastikan ini ada
+    getTotalStock, 
+    updateProductStock,
 };
