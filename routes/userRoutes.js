@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+// Secret key for signing JWT (in a real app, use environment variables)
+const JWT_SECRET = 'secret-warehouse';
 
 // Endpoint untuk Login
 router.post('/login', async (req, res) => {
@@ -34,8 +38,16 @@ router.post('/login', async (req, res) => {
               return res.status(400).json({ error: 'Invalid credentials.' });
           }
 
+          // Generate JWT with user ID and role
+            const payload = {
+                userId: user.id,
+                role: user.role
+            };
+        
+            const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+
           // Jika berhasil login
-          res.status(200).json({ message: 'Login successful!', userId: user.id });
+          res.status(200).json({ message: 'Login successful!', userId: user.id, token, role: user.role });
       });
   } catch (err) {
       console.error('Error during login:', err);
@@ -46,7 +58,7 @@ router.post('/login', async (req, res) => {
 // Endpoint untuk Sign Up
 router.post('/signup', async (req, res) => {
     console.log('Request body:', req.body);
-    const { fullname, email, phone, password } = req.body;
+    const { fullname, email, phone, role, password } = req.body;
 
     // Validasi input
     if (!fullname || !email || !password) {
@@ -58,8 +70,8 @@ router.post('/signup', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Update query untuk menyimpan data ke tabel 'users'
-        const query = 'INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)';
-        db.query(query, [fullname, email, phone, hashedPassword], (err, result) => {
+        const query = 'INSERT INTO users (name, email, phone, role, password) VALUES (?, ?, ?, ?, ?)';
+        db.query(query, [fullname, email, phone, role, hashedPassword], (err, result) => {
             if (err) {
                 console.error('Database error:', err); // Logging error
                 if (err.code === 'ER_DUP_ENTRY') {
@@ -74,6 +86,7 @@ router.post('/signup', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+  
 
 router.get('/:id', async (req, res) => {
     const userId = req.params.id;

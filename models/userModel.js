@@ -9,10 +9,10 @@ const db = mysql.createPool({
 });
 
 // Fungsi untuk menyimpan user ke database
-const createUser = (fullname, email, phone, hashedPassword) => {
+const createUser = (fullname, email, phone, role, hashedPassword) => {
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO users (fullname, email, phone, password) VALUES (?, ?, ?, ?)';
-        db.query(query, [fullname, email, phone, hashedPassword], (err, result) => {
+        const query = 'INSERT INTO users (fullname, email, phone, role, password) VALUES (?, ?, ?, ?, ?)';
+        db.query(query, [fullname, email, phone, role, hashedPassword], (err, result) => {
             if (err) return reject(err);
             resolve(result);
         });

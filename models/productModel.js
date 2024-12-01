@@ -11,11 +11,23 @@ const getAllProducts = (callback) => {
             p.unit,
             p.status,
             w.name AS warehouse_name,
+            p.location,
             p.shelf_location
         FROM products p
         LEFT JOIN warehouses w ON p.location = w.id
     `;
     db.query(sql, callback);
+};
+
+const getProductImageByID = (productID, callback) => {
+    const sql = `
+        SELECT 
+            p.image
+        FROM products p
+        LEFT JOIN warehouses w ON p.location = w.id
+        WHERE p.id = ?
+    `;
+    db.query(sql, [productID], callback);
 };
 
 
@@ -41,8 +53,8 @@ const getTotalStock = (callback) => {
 
 
 const updateProduct = (id, product, callback) => {
-    const sql = 'UPDATE products SET sku = ?, name = ?, stock = ?, unit = ?, status = ?, location = ?, shelf_location = ? WHERE id = ?';
-    db.query(sql, [product.sku, product.name, product.stock, product.unit, product.status, product.location, product.shelf_location, id], callback);
+    const sql = 'UPDATE products SET sku = ?, name = ?, stock = ?, unit = ?, status = ?, location = ?, shelf_location = ?, image = ? WHERE id = ?';
+    db.query(sql, [product.sku, product.name, product.stock, product.unit, product.status, product.location, product.shelf_location, product.image, id], callback);
 };
 
 
@@ -67,4 +79,5 @@ module.exports = {
     deleteProduct,
     getTotalStock, 
     updateProductStock,
+    getProductImageByID,
 };

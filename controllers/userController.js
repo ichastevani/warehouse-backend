@@ -3,7 +3,7 @@ const { createUser } = require("../models/userModel"); // Import model
 
 // Controller untuk Sign Up
 const signUp = async (req, res) => {
-  const { fullname, email, phone, password } = req.body;
+    const { fullname, email, phone, role, password } = req.body;
 
   if (!fullname || !email || !password) {
     return res.status(400).json({ error: "Please fill all required fields" });
@@ -13,8 +13,8 @@ const signUp = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Simpan user ke database
-    const result = await createUser(fullname, email, phone, hashedPassword);
+        // Simpan user ke database
+        const result = await createUser(fullname, email, phone, hashedPassword);
 
     res
       .status(201)

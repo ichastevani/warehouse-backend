@@ -15,6 +15,21 @@ const getTotalStock = (req, res) => {
   });
 };
 
+const getProductImageByID = (req, res) => {
+  const productID = req.params.id;
+  productModel.getProductImageByID(productID, (err, results) => {
+      if (err) return res.status(500).json({ error: err });
+
+      if (results.length > 0) {
+        const imageBuffer = results[0].image; // image_data is a BLOB column
+        res.setHeader('Content-Type', 'image/jpeg'); // or 'image/png' depending on your image type
+        res.send(imageBuffer);
+      } else {
+        res.status(404).send('Image not found');
+      }
+  });
+};
+
 
 const createProduct = (req, res) => {
   var image
@@ -34,7 +49,11 @@ const createProduct = (req, res) => {
 
 const updateProduct = (req, res) => {
   const { id } = req.params;
-  const updatedProduct = req.body;
+  if (req.file) {
+    image = req.file.buffer; // The uploaded image
+  }
+  const { sku, name, stock, unit, status, location, shelf_location } = req.body;
+  const updatedProduct = { sku, name, stock, unit, status, location, image, shelf_location };
   productModel.updateProduct(id, updatedProduct, (err) => {
     if (err) return res.status(500).json({ error: err });
     res.json({ message: "Produk berhasil diperbarui" });
@@ -79,5 +98,6 @@ module.exports = {
   deleteProduct,
   getTotalStock, 
   updateStock,
+  getProductImageByID,
 };
 
