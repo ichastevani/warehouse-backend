@@ -8,6 +8,12 @@ const saveStockHistory = (productId, addStock, outStock, callback) => {
   db.query(sql, [productId, addStock, outStock], callback);
 };
 
+const getAllStockHistory = (callback) => {
+  const sql = 'SELECT * FROM stock_history ORDER BY created_at DESC';
+  db.query(sql, callback);
+};
+
 module.exports = {
-  saveStockHistory
+  saveStockHistory,
+  getAllStockHistory,
 };
