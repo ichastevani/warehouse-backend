@@ -34,7 +34,7 @@ const getProductImageByID = (req, res) => {
 const createProduct = (req, res) => {
   var image
   if (req.file) {
-    image = req.file.buffer; // The uploaded image
+    image = req.file.buffer; // The uploaded image 
   }
   
   const { sku, name, stock, unit, status, location, shelf_location } = req.body;

@@ -4,7 +4,7 @@ const router = express.Router();
 const pusatdataController = require('../controllers/pusatdataController');
 
 // Get all pusatdata records
-router.get('/api/pusatdata', pusatdataController.getPusatData);
+router.get('/api/pusatdata', pusatdataController.getPaginatedPusatData);
 
 // Create a new pusatdata record
 router.post('/api/pusatdata', pusatdataController.createPusatData);

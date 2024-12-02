@@ -1,28 +1,37 @@
-// controllers/pusatdataController.js
 const pusatdataModel = require('../models/pusatdataModel');
 
-// Get all pusatdata records
-const getPusatData = async (req, res) => {
+// Get paginated pusatdata records
+const getPaginatedPusatData = async (req, res) => {
+  const { page = 1, limit = 50 } = req.query; // Default page = 1 and limit = 10
+  const offset = (page - 1) * limit;
+
   try {
-    const pusatData = await pusatdataModel.getAllPusatData();
-    res.status(200).json(pusatData);
+    const pusatData = await pusatdataModel.getPaginatedPusatData(limit, offset);
+    const totalRecords = await pusatdataModel.getPusatDataCount();
+
+    res.status(200).json({
+      data: pusatData,
+      totalRecords,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(totalRecords / limit),
+    });
   } catch (error) {
-    console.error('Error fetching pusatdata:', error);
-    res.status(500).json({ error: 'Failed to fetch pusatdata' });
+    console.error('Error fetching paginated pusatdata:', error);
+    res.status(500).json({ error: 'Failed to fetch paginated pusatdata' });
   }
 };
 
 // Create a new pusatdata record
 const createPusatData = async (req, res) => {
-  const { name, email, accessLevel, dataCenter } = req.body;
+  const { name, email, access_level, data_center } = req.body;
   try {
-    const result = await pusatdataModel.createPusatData(name, email, accessLevel, dataCenter);
+    const result = await pusatdataModel.createPusatData(name, email, access_level, data_center);
     res.status(201).json({
       id: result.insertId,
       name,
       email,
-      accessLevel,
-      dataCenter
+      access_level,
+      data_center,
     });
   } catch (error) {
     console.error('Error adding pusatdata:', error);
@@ -41,7 +50,7 @@ const updatePusatData = async (req, res) => {
       name,
       email,
       accessLevel,
-      dataCenter
+      dataCenter,
     });
   } catch (error) {
     console.error('Error updating pusatdata:', error);
@@ -62,8 +71,8 @@ const deletePusatData = async (req, res) => {
 };
 
 module.exports = {
-  getPusatData,
+  getPaginatedPusatData,
   createPusatData,
   updatePusatData,
-  deletePusatData
+  deletePusatData,
 };
