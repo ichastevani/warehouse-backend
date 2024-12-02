@@ -3,6 +3,8 @@ const stockHistoryModel = require('../models/stockHistoryModel');
 const recordStockHistory = (req, res) => {
   const { productId, addStock, outStock } = req.body;
 
+  console.log('Received data:', req.body);  // Menambahkan log untuk memeriksa data yang diterima
+
   if (typeof addStock !== 'number' || typeof outStock !== 'number' || typeof productId !== 'number') {
     return res.status(400).json({ error: 'Invalid input data' });
   }
