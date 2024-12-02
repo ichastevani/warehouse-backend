@@ -1,5 +1,5 @@
 // models/productModel.js
-const db = require('../config/db');
+const db = require('../config/db'); // Pastikan untuk mengimpor koneksi yang benar
 
 const getAllProducts = (callback) => {
     const sql = `
@@ -30,16 +30,13 @@ const getProductImageByID = (productID, callback) => {
     db.query(sql, [productID], callback);
 };
 
-
 const addProduct = (product, callback) => {
-    console.log(product)
     const sql = `
         INSERT INTO products (sku, name, stock, unit, status, location, image, shelf_location) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
     db.query(sql, [product.sku, product.name, product.stock, product.unit, product.status, product.location, product.image, product.shelf_location], callback);
 };
-
 
 const getTotalStock = (callback) => {
     const sql = `SELECT SUM(stock) AS totalStock FROM products`;
@@ -49,14 +46,10 @@ const getTotalStock = (callback) => {
     });
 };
 
-
-
-
 const updateProduct = (id, product, callback) => {
     const sql = 'UPDATE products SET sku = ?, name = ?, stock = ?, unit = ?, status = ?, location = ?, shelf_location = ?, image = ? WHERE id = ?';
     db.query(sql, [product.sku, product.name, product.stock, product.unit, product.status, product.location, product.shelf_location, product.image, id], callback);
 };
-
 
 const deleteProduct = (id, callback) => {
     const sql = 'DELETE FROM products WHERE id = ?';
@@ -72,6 +65,25 @@ const updateProductStock = (id, stock, callback) => {
     db.query(sql, [stock, id], callback);
 };
 
+// Fungsi untuk mendapatkan produk populer berdasarkan aktivitas di stock_history
+const getPopularProducts = (callback) => {
+    const sql = `
+      SELECT 
+        sh.product_id, 
+        p.name, 
+        SUM(sh.add_stock) AS total_added_stock,
+        SUM(sh.out_stock) AS total_out_stock,
+        (SUM(sh.add_stock) + SUM(sh.out_stock)) AS total_activity
+      FROM stock_history sh
+      JOIN products p ON sh.product_id = p.id
+      GROUP BY sh.product_id
+      ORDER BY total_activity DESC
+      LIMIT 5
+    `;
+    
+    db.query(sql, callback);
+};
+
 module.exports = {
     getAllProducts,
     addProduct,
@@ -80,4 +92,5 @@ module.exports = {
     getTotalStock, 
     updateProductStock,
     getProductImageByID,
+    getPopularProducts
 };

@@ -19,5 +19,7 @@ router.delete('/:id',jwtUtils.verifyToken, jwtUtils.verifyRole("admin"), product
 router.put('/update-stock/:id', productController.updateStock);
 // Route untuk mendapatkan total stok
 router.get('/total-stock', productController.getTotalStock);
+// popular produk pada dashboard
+router.get('/popular-products', productController.getPopularProducts);
 
 module.exports = router;

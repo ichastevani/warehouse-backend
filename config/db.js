@@ -5,7 +5,7 @@ const mysql = require('mysql2');
 const db = mysql.createConnection({
     host: 'localhost',               // Host database (tetap 'localhost' jika berjalan di lokal)
     user: 'root',                    // Username MySQL Anda
-    password: '',                // Password MySQL Anda
+    password: 'root',                // Password MySQL Anda
     database: 'warehouse_db',        // Nama database Anda
     multipleStatements: true         // Jika perlu menjalankan beberapa query dalam 1 perintah
 });

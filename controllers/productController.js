@@ -30,7 +30,6 @@ const getProductImageByID = (req, res) => {
   });
 };
 
-
 const createProduct = (req, res) => {
   var image
   if (req.file) {
@@ -44,8 +43,6 @@ const createProduct = (req, res) => {
       res.json({ message: "Produk berhasil ditambahkan", id: result.insertId });
   });
 };
-
-
 
 const updateProduct = (req, res) => {
   const { id } = req.params;
@@ -91,6 +88,17 @@ const updateStock = (req, res) => {
   });
 };
 
+const getPopularProducts = (req, res) => {
+  // Panggil fungsi getPopularProducts pada productModel untuk mendapatkan data populer
+  productModel.getPopularProducts((err, products) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error fetching popular products', error: err });
+    }
+    res.json(products);
+  });
+};
+
 module.exports = {
   getProducts,
   createProduct,
@@ -99,5 +107,5 @@ module.exports = {
   getTotalStock, 
   updateStock,
   getProductImageByID,
+  getPopularProducts
 };
-
