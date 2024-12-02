@@ -1,0 +1,21 @@
+const stockHistoryModel = require('../models/stockHistoryModel');
+
+const recordStockHistory = (req, res) => {
+  const { productId, addStock, outStock } = req.body;
+
+  if (typeof addStock !== 'number' || typeof outStock !== 'number' || typeof productId !== 'number') {
+    return res.status(400).json({ error: 'Invalid input data' });
+  }
+
+  stockHistoryModel.saveStockHistory(productId, addStock, outStock, (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: 'Error saving stock history', details: err });
+    }
+
+    res.status(200).json({ message: 'Stock history saved successfully', result });
+  });
+};
+
+module.exports = {
+  recordStockHistory
+};
