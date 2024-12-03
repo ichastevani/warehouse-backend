@@ -71,18 +71,18 @@ const getPopularProducts = (callback) => {
       SELECT 
         sh.product_id, 
         p.name, 
-        SUM(sh.add_stock) AS total_added_stock,
-        SUM(sh.out_stock) AS total_out_stock,
-        (SUM(sh.add_stock) + SUM(sh.out_stock)) AS total_activity
-      FROM stock_history sh
-      JOIN products p ON sh.product_id = p.id
-      GROUP BY sh.product_id
-      ORDER BY total_activity DESC
-      LIMIT 5
+        COUNT(*) AS total_activity
+        FROM stock_history sh
+        JOIN products p ON sh.product_id = p.id
+        WHERE sh.add_stock > 0 OR sh.out_stock > 0
+        GROUP BY sh.product_id
+        ORDER BY total_activity DESC
+        LIMIT 5
     `;
     
     db.query(sql, callback);
 };
+
 
 module.exports = {
     getAllProducts,
