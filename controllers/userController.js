@@ -1,9 +1,10 @@
 const bcrypt = require("bcrypt");
-const { createUser } = require("../models/userModel"); // Import model
+const { createUser } = require("../models/userModel"); // Import model user
+const Company = require("../models/companyModel"); // Import model company
 
 // Controller untuk Sign Up
 const signUp = async (req, res) => {
-    const { fullname, email, phone, role, password } = req.body;
+  const { fullname, email, phone, role, password } = req.body;
 
   if (!fullname || !email || !password) {
     return res.status(400).json({ error: "Please fill all required fields" });
@@ -13,15 +14,18 @@ const signUp = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Simpan user ke database
-        const result = await createUser(fullname, email, phone, hashedPassword);
+    // Simpan user ke database
+    const result = await createUser(fullname, email, phone, hashedPassword);
 
-    res
-      .status(201)
-      .json({
-        message: "User registered successfully",
-        userId: result.insertId,
-      });
+    const userId = result.insertId; // Dapatkan userId dari hasil insert
+
+    // Buat entry default di tabel companies
+    await Company.add({ user_id: userId });
+
+    res.status(201).json({
+      message: "User registered successfully",
+      userId,
+    });
   } catch (err) {
     console.error("Error in signUp controller:", err);
     if (err.code === "ER_DUP_ENTRY") {

@@ -1,35 +1,42 @@
 const Company = require("../models/companyModel");
 
 const companyController = {
-  updateCompany: (req, res) => {
-    const userId = req.params.userId; // Ambil userId dari parameter URL
+  // Menangani update atau insert perusahaan berdasarkan userId
+  updateOrCreateCompany: (req, res) => {
+    const userId = req.params.userId;
     const { name, address, phone } = req.body;
-    const logo = req.file ? req.file.path : null; // Mendapatkan path logo jika ada
+    const logo = req.file ? req.file.path : null; // Logo jika ada
 
-    // Ambil data perusahaan lama terlebih dahulu
-    Company.getByUserId(userId, (err, existingCompany) => {
+    // Mengecek apakah data perusahaan sudah ada berdasarkan userId
+    Company.getByUserId(userId, (err, result) => {
       if (err) {
         console.error(err);
-        return res.status(500).json({ success: false, message: "Failed to fetch company data" });
-      }
-      if (existingCompany.length === 0) {
-        return res.status(404).json({ success: false, message: "Company not found" });
+        return res.status(500).json({ success: false, message: "Failed to fetch company" });
       }
 
-      const currentLogo = existingCompany[0].logo; // Logo lama
-      const updatedLogo = logo || currentLogo; // Pertahankan logo lama jika logo baru tidak ada
-
-      // Lakukan pembaruan data
-      Company.update(userId, name, address, phone, updatedLogo, (updateErr, result) => {
-        if (updateErr) {
-          console.error(updateErr);
-          return res.status(500).json({ success: false, message: "Failed to update company" });
-        }
-        res.status(200).json({ success: true, message: "Company updated successfully" });
-      });
+      if (result.length > 0) {
+        // Jika perusahaan sudah ada, lakukan update
+        Company.update(userId, name, address, phone, logo, (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, message: "Failed to update company" });
+          }
+          res.status(200).json({ success: true, message: "Company updated successfully" });
+        });
+      } else {
+        // Jika perusahaan tidak ada, lakukan insert
+        Company.create(userId, name, address, phone, logo, (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, message: "Failed to create company" });
+          }
+          res.status(201).json({ success: true, message: "Company created successfully" });
+        });
+      }
     });
   },
 
+  // Ambil perusahaan berdasarkan userId
   getCompanyByUserId: (req, res) => {
     const userId = req.params.userId;
     Company.getByUserId(userId, (err, result) => {
