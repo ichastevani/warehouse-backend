@@ -6,4 +6,6 @@ router.post('/stock-history', stockHistoryController.recordStockHistory);
 
 router.get('/', stockHistoryController.getAllStockHistory);
 
+router.get('/report', stockHistoryController.report);
+
 module.exports = router;
