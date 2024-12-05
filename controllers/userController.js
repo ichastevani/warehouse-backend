@@ -31,4 +31,15 @@ const signUp = async (req, res) => {
   }
 };
 
-module.exports = { signUp };
+const updateUserProfile = async (req, res) => {
+  const { id, name, email, phone } = req.body;
+
+  try {
+    await userModel.updateUser({ id, name, email, phone });
+    res.status(200).json({ message: "User profile updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update user profile", error });
+  }
+};
+
+module.exports = { signUp, updateUserProfile };

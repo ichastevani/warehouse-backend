@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const userController = require("../controllers/userController");
 
 // Secret key for signing JWT (in a real app, use environment variables)
 const JWT_SECRET = 'secret-warehouse';
@@ -92,7 +93,7 @@ router.get('/:id', async (req, res) => {
     const userId = req.params.id;
 
     try {
-        const query = 'SELECT name FROM users WHERE id = ?';
+        const query = 'SELECT * FROM users WHERE id = ?';
         db.query(query, [userId], (err, results) => {
             if (err) {
                 console.error('Database error:', err);
@@ -103,7 +104,7 @@ router.get('/:id', async (req, res) => {
                 return res.status(404).json({ error: 'User not found' });
             }
 
-            res.status(200).json({ name: results[0].name });
+            res.status(200).json({ name: results[0].name, email: results[0].email });
         });
     } catch (err) {
         console.error('Error fetching user:', err);
@@ -111,5 +112,6 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.put("/update", userController.updateUserProfile);
 
 module.exports = router;

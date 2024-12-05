@@ -1,12 +1,4 @@
-const mysql = require('mysql2');
-
-// Buat koneksi database
-const db = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'root', // Ganti sesuai dengan password MySQL Anda
-    database: 'expressdb', // Nama database
-});
+const db = require('../config/db');
 
 // Fungsi untuk menyimpan user ke database
 const createUser = (fullname, email, phone, role, hashedPassword) => {
@@ -19,4 +11,16 @@ const createUser = (fullname, email, phone, role, hashedPassword) => {
     });
 };
 
-module.exports = { createUser };
+const getUserById = async (id) => {
+    const [rows] = await db.query("SELECT * FROM users WHERE id = ?", [id]);
+    return rows[0];
+};
+
+const updateUser = async ({ id, name, email, phone}) => {
+    await db.query(
+        "UPDATE users SET name = ?, email = ?, phone ? WHERE id = ?",
+    [name, email, phone, id]
+  );
+};
+    
+module.exports = { createUser, getUserById, updateUser };
