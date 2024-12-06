@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const userController = require("../controllers/userController");
+const {userController, changePassword} = require("../controllers/userController");
 
 // Secret key for signing JWT (in a real app, use environment variables)
 const JWT_SECRET = 'secret-warehouse';
@@ -112,6 +112,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.put("/update", userController.updateUserProfile);
+
+router.put("/changePassword/:userId", changePassword);
 
 module.exports = router;

@@ -11,10 +11,25 @@ const createUser = (fullname, email, phone, role, hashedPassword) => {
     });
 };
 
-const getUserById = async (id) => {
-    const [rows] = await db.query("SELECT * FROM users WHERE id = ?", [id]);
-    return rows[0];
-};
+const getUserById = async (userId) => {
+    return new Promise((resolve, reject) => {
+      const query = "SELECT * FROM users WHERE id = ?";
+      db.query(query, [userId], (err, result) => {
+        if (err) return reject(err);
+        resolve(result[0]); // Return first result (since id should be unique)
+      });
+    });
+  };
+
+  const updateUserPassword = async (userId, hashedPassword) => {
+    return new Promise((resolve, reject) => {
+      const query = "UPDATE users SET password = ? WHERE id = ?";
+      db.query(query, [hashedPassword, userId], (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  };
 
 const updateUser = async ({ id, name, email, phone}) => {
     await db.query(
@@ -23,4 +38,4 @@ const updateUser = async ({ id, name, email, phone}) => {
   );
 };
     
-module.exports = { createUser, getUserById, updateUser };
+module.exports = { createUser, getUserById, updateUser, updateUserPassword };
