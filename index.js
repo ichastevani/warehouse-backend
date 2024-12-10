@@ -9,6 +9,7 @@ const userRoutes = require('./routes/userRoutes');
 const companyRoutes = require('./routes/companyRoutes');
 const pusatdataRoutes = require('./routes/pusatdataRoutes');
 const stockHistory = require('./routes/stockHistoryRoutes');
+const resetDataRoutes = require('./routes/resetDataRoutes');
 
 const app = express();
 app.use(cors());
@@ -29,6 +30,8 @@ app.use('/api/gudang', warehouseRoutes);
 app.use('/api/company', companyRoutes);
 
 app.use(pusatdataRoutes);
+
+app.use("/api/reset", resetDataRoutes);
 
 const PORT = 5000;
 app.listen(PORT, () => {
