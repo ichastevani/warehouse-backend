@@ -13,6 +13,12 @@ const WarehouseController = {
 
     getWarehouseById: (req, res) => {
         const id = req.params.id;
+
+        // Validate id (ensure it's a valid number)
+        if (isNaN(id)) {
+            return res.status(400).json({ message: 'Invalid warehouse ID' });
+        }
+
         Warehouse.getWarehouseById(id, (err, warehouse) => {
             if (err) {
                 return res.status(500).json({ message: 'Error retrieving warehouse', error: err });
@@ -26,6 +32,12 @@ const WarehouseController = {
 
     addWarehouse: (req, res) => {
         const { name, address, detail } = req.body;
+
+        // Basic validation
+        if (!name || !address) {
+            return res.status(400).json({ message: 'Name and address are required' });
+        }
+
         const newWarehouse = { name, address, detail };
         Warehouse.addWarehouse(newWarehouse, (err, result) => {
             if (err) {
@@ -38,6 +50,16 @@ const WarehouseController = {
     updateWarehouse: (req, res) => {
         const id = req.params.id;
         const { name, address, detail } = req.body;
+
+        // Validate id
+        if (isNaN(id)) {
+            return res.status(400).json({ message: 'Invalid warehouse ID' });
+        }
+
+        if (!name || !address) {
+            return res.status(400).json({ message: 'Name and address are required' });
+        }
+
         const updatedWarehouse = { name, address, detail };
         Warehouse.updateWarehouse(id, updatedWarehouse, (err, result) => {
             if (err) {
@@ -49,6 +71,12 @@ const WarehouseController = {
 
     deleteWarehouse: (req, res) => {
         const id = req.params.id;
+
+        // Validate id
+        if (isNaN(id)) {
+            return res.status(400).json({ message: 'Invalid warehouse ID' });
+        }
+
         Warehouse.deleteWarehouse(id, (err, result) => {
             if (err) {
                 return res.status(500).json({ message: 'Error deleting warehouse', error: err });
