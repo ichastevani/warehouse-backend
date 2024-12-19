@@ -21,8 +21,8 @@ const getProductImageByID = (req, res) => {
       if (err) return res.status(500).json({ error: err });
 
       if (results.length > 0) {
-        const imageBuffer = results[0].image; // image_data is a BLOB column
-        res.setHeader('Content-Type', 'image/jpeg'); // or 'image/png' depending on your image type
+        const imageBuffer = results[0].image; 
+        res.setHeader('Content-Type', 'image/jpeg'); 
         res.send(imageBuffer);
       } else {
         res.status(404).send('Image not found');

@@ -1,6 +1,5 @@
 // models/productModel.js
-const db = require('../config/db'); // Pastikan untuk mengimpor koneksi yang benar
-
+const db = require('../config/db'); 
 const getAllProducts = (callback) => {
     const sql = `
         SELECT 
